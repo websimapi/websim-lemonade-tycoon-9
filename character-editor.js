@@ -143,7 +143,12 @@ function createWornItem(src, itemType, alt, x, y, dollContainer, style = {}) {
     wrapper.dataset.itemType = itemType;
 
     const wornItem = document.createElement('img');
-    wornItem.src = src;
+    
+    // Use a CORS proxy for all images to prevent canvas tainting
+    const proxiedSrc = `https://images.weserv.nl/?url=${encodeURIComponent(src)}`;
+    wornItem.crossOrigin = "anonymous";
+    wornItem.src = proxiedSrc;
+    
     wornItem.alt = alt;
     wornItem.classList.add('worn-item');
     wornItem.dataset.itemType = itemType; // Keep for generator compatibility
@@ -157,14 +162,12 @@ function createWornItem(src, itemType, alt, x, y, dollContainer, style = {}) {
         wrapper.appendChild(handle);
     });
 
-    wrapper.onload = () => { // This should be on wornItem.onload
-        // The logic inside onload needs to run after the image has loaded to get its dimensions.
-    };
-    
+    // This was on wrapper.onload before, but it should be on the image itself.
     dollContainer.appendChild(wrapper);
-    updatePreview();
+    
 
     wornItem.onload = () => {
+        updatePreview(); // Update preview once image is loaded
         if (style.left && style.top) {
             wrapper.style.left = style.left;
             wrapper.style.top = style.top;

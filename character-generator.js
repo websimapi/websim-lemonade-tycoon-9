@@ -20,7 +20,8 @@ export async function drawCompositeImageToCanvas(canvas, dollImage, dollContaine
 
     const dollImgToDraw = new Image();
     dollImgToDraw.crossOrigin = 'anonymous';
-    dollImgToDraw.src = dollImage.src;
+    // Use a CORS proxy for the doll image to prevent canvas tainting.
+    dollImgToDraw.src = `https://images.weserv.nl/?url=${encodeURIComponent(dollImage.src)}`;
 
     await new Promise(resolve => {
         if (dollImgToDraw.complete && dollImgToDraw.naturalHeight !== 0) resolve();
@@ -35,6 +36,7 @@ export async function drawCompositeImageToCanvas(canvas, dollImage, dollContaine
         if (!item) continue;
 
         const itemImgToDraw = new Image();
+        // The item.src is already proxied from character-editor.js
         itemImgToDraw.crossOrigin = 'anonymous';
         itemImgToDraw.src = item.src;
 
