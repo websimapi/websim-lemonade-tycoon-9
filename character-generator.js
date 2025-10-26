@@ -101,13 +101,15 @@ function buildPrompt(dollImage, dollContainer) {
 }
 
 export async function generateCharacter(dollImage, dollContainer) {
-    const imageDataUrl = await getCompositeImageAsDataURL(dollImage, dollContainer);
+    const internalCanvas = await drawCompositeImageToCanvas(elements.aiPreviewCanvas, dollImage, dollContainer);
+    const imageDataUrl = internalCanvas.toDataURL('image/png');
     const promptText = buildPrompt(dollImage, dollContainer);
     
     const result = await websim.imageGen({
         prompt: promptText,
         image_inputs: [{ url: imageDataUrl }],
-        aspect_ratio: "2:3",
+        width: internalCanvas.width,
+        height: internalCanvas.height,
     });
     
     return result.url;
