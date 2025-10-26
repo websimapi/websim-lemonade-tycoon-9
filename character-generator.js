@@ -101,7 +101,7 @@ function buildPrompt(dollImage, dollContainer) {
         }
     }).join('. ');
     
-    return `Generate a full-body character portrait based on the provided paper doll image. The character is a ${gender}. The final image should be in a friendly, cartoon art style suitable for a game. Keep the character in a similar T-pose. Character details: ${clothingList}.`;
+    return `Generate a full-body character portrait, fully zoomed out to show the character from head to toe. The character is a ${gender}. The final image should be in a friendly, cartoon art style suitable for a game. Keep the character in a similar T-pose. Character details: ${clothingList}.`;
 }
 
 export async function generateCharacter(dollImage, dollContainer) {
