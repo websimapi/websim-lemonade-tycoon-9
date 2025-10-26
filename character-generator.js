@@ -3,6 +3,16 @@ import { elements } from './ui.js';
 export async function drawCompositeImageToCanvas(canvas, dollImage, dollContainer) {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+
+    const dollNaturalWidth = dollImage.naturalWidth || 500;
+    const dollNaturalHeight = dollImage.naturalHeight || 1000;
+    const aspectRatio = dollNaturalHeight / dollNaturalWidth;
+    
+    // Set canvas resolution to match its display size while respecting aspect ratio
+    // This prevents the squished look.
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientWidth * aspectRatio;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Use a fixed high-res size for the offscreen canvas to ensure quality,
@@ -10,12 +20,6 @@ export async function drawCompositeImageToCanvas(canvas, dollImage, dollContaine
     const internalCanvas = document.createElement('canvas');
     const internalCtx = internalCanvas.getContext('2d');
 
-    const dollNaturalWidth = dollImage.naturalWidth || 500;
-    const dollNaturalHeight = dollImage.naturalHeight || 1000;
-    
-    internalCanvas.width = dollNaturalWidth;
-    internalCanvas.height = dollNaturalHeight;
-    
     const dollRect = dollContainer.getBoundingClientRect();
 
     const dollImgToDraw = new Image();
