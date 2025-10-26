@@ -1,0 +1,867 @@
+body {
+    margin: 0;
+    font-family: 'Fredoka One', cursive;
+    background-image: url('sky_background.png');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    position: relative;
+    text-align: center;
+}
+
+.title-header h1 {
+    font-size: clamp(3rem, 15vw, 7rem);
+    color: #FFD700; /* Gold */
+    -webkit-text-stroke: 2px #A0522D; /* Sienna */
+    margin-bottom: 2rem;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.menu-buttons button {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.5rem, 6vw, 2.5rem);
+    padding: 1rem 2rem;
+    border: 5px solid #A0522D; /* Sienna */
+    border-radius: 50px;
+    background-color: #FFD700; /* Gold */
+    color: #A0522D;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.menu-buttons button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.4);
+}
+
+.hidden {
+    display: none !important;
+}
+
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    color: white;
+}
+
+.loading-spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #FFD700;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#generation-result-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 15;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+#generation-result-screen h2 {
+    font-size: clamp(2rem, 10vw, 4rem);
+    color: #FFD700;
+    -webkit-text-stroke: 1.5px #A0522D;
+    margin-bottom: 1rem;
+}
+
+#generated-character-image {
+    max-width: 90%;
+    max-height: 70vh;
+    border: 5px solid #A0522D;
+    border-radius: 15px;
+    background-color: #fff;
+    object-fit: contain;
+}
+
+.result-buttons {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.result-buttons button {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1rem, 4vw, 1.5rem);
+    padding: 0.6rem 1.5rem;
+    border: 3px solid #A0522D;
+    border-radius: 30px;
+    background-color: #FFD700;
+    color: #A0522D;
+    cursor: pointer;
+}
+
+#character-creation-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align to top on mobile */
+    align-items: center;
+    z-index: 10;
+    padding: 1rem;
+    box-sizing: border-box;
+    overflow-y: auto; /* Allow scrolling if content overflows */
+}
+
+#character-creation-screen h2 {
+    font-size: clamp(2rem, 10vw, 4rem);
+    color: #FFD700;
+    -webkit-text-stroke: 1.5px #A0522D;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    display: none; /* Hide header as requested */
+}
+
+.creation-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    align-items: flex-start; /* Align items to the top */
+}
+
+#inventory-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(160, 82, 45, 0.8);
+    border: 4px solid #A0522D;
+    border-radius: 15px;
+    padding: 0.5rem;
+    width: 90vw;
+    max-width: 400px;
+    box-sizing: border-box;
+    position: relative; /* Added for positioning the new button */
+}
+
+#browse-assets-btn {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: #FFD700;
+    border: 2px solid #A0522D;
+    color: #A0522D;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    line-height: 1;
+}
+
+#open-generator-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #FFD700;
+    border: 2px solid #A0522D;
+    color: #A0522D;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    line-height: 1;
+}
+
+#inventory-categories {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.category-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(0.8rem, 3.5vw, 1.1rem);
+    padding: 0.3rem 0.6rem;
+    border: 2px solid #A0522D;
+    border-radius: 20px;
+    background-color: #FFD700;
+    color: #A0522D;
+    cursor: pointer;
+}
+
+.category-btn.active {
+    background-color: #A0522D;
+    color: #FFD700;
+}
+
+#item-carousel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.carousel-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.2rem, 5vw, 2rem);
+    background: none;
+    border: none;
+    color: #FFD700;
+    cursor: pointer;
+    padding: 0 1rem;
+    -webkit-text-stroke: 1px #A0522D;
+}
+
+#clothing-palette {
+    width: clamp(70px, 18vw, 100px);
+    height: clamp(70px, 18vw, 100px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden; /* Ensures only one item is visible */
+    touch-action: pan-y; /* Allow vertical scroll, but capture horizontal for swipe */
+}
+
+.clothing-item {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    position: absolute;
+    background: rgba(255, 215, 0, 0.3);
+    border: 2px dashed #FFD700;
+    border-radius: 10px;
+    cursor: grab;
+    transition: transform 0.2s, opacity 0.3s ease-in-out;
+    opacity: 0; /* Hidden by default */
+    transform: scale(0.8); /* Start slightly smaller */
+    pointer-events: none; /* Inactive by default */
+    flex-shrink: 0;
+}
+
+.clothing-item.active {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto; /* Active item is interactive */
+}
+
+.clothing-item:hover {
+    transform: scale(1.1);
+}
+
+#character-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.gender-selection {
+    margin-bottom: 1rem;
+}
+
+.gender-selection .gender-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(0.9rem, 3.5vw, 1.3rem);
+    padding: 0.4rem 0.8rem;
+    border: 2px solid #A0522D;
+    border-radius: 20px;
+    background-color: #FFD700;
+    color: #A0522D;
+    cursor: pointer;
+    margin: 0 0.5rem;
+}
+
+.gender-selection .gender-btn.active {
+    background-color: #A0522D;
+    color: #FFD700;
+}
+
+#doll-container {
+    position: relative;
+    width: clamp(150px, 40vw, 220px);
+    height: clamp(300px, 55vh, 440px);
+    max-width: 250px; /* Add max width */
+    max-height: 500px; /* Add max height */
+}
+
+#ai-preview-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    padding: 0.5rem;
+}
+
+#ai-preview-container p {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.8rem;
+    color: #FFD700;
+}
+
+#ai-preview-canvas {
+    width: 80px;
+    height: 160px;
+    background-color: white;
+    border-radius: 5px;
+    border: 2px solid #A0522D;
+    object-fit: contain;
+}
+
+#doll-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#doll-container .worn-item {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none; /* Interaction is on the wrapper */
+}
+
+.worn-item-wrapper {
+    position: absolute;
+    height: auto;
+    touch-action: none; /* Prevent scrolling while interacting with item */
+    cursor: move;
+    border: 2px solid transparent;
+}
+
+.worn-item-wrapper.selected {
+    border-color: rgba(255, 215, 0, 0.8);
+}
+
+.worn-item-wrapper.selected .resize-handle {
+    display: block;
+}
+
+.resize-handle {
+    display: none;
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background-color: #FFD700;
+    border: 2px solid #A0522D;
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.resize-handle-tl {
+    top: -8px;
+    left: -8px;
+    cursor: nwse-resize;
+}
+.resize-handle-tr {
+    top: -8px;
+    right: -8px;
+    cursor: nesw-resize;
+}
+.resize-handle-bl {
+    bottom: -8px;
+    left: -8px;
+    cursor: nesw-resize;
+}
+.resize-handle-br {
+    bottom: -8px;
+    right: -8px;
+    cursor: nwse-resize;
+}
+
+.dragging-clone {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.8;
+    width: 80px; /* Set an explicit size */
+    height: 80px; /* Set an explicit size */
+    object-fit: contain;
+    transform: scale(1.1); /* Optional: slight scale up for visual feedback */
+}
+
+.creation-buttons {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap; /* Allow buttons to wrap on small screens */
+    justify-content: center;
+}
+
+.creation-buttons button {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1rem, 4vw, 1.5rem);
+    padding: 0.6rem 1.5rem;
+    border: 3px solid #A0522D;
+    border-radius: 30px;
+    background-color: #FFD700;
+    color: #A0522D;
+    cursor: pointer;
+}
+
+#asset-browser-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 26;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.asset-browser-content {
+    background: rgba(160, 82, 45, 0.95);
+    border: 4px solid #A0522D;
+    border-radius: 15px;
+    padding: 1rem;
+    width: 95vw;
+    max-width: 800px;
+    height: 90vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    color: white;
+}
+
+.asset-browser-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.asset-browser-header h3 {
+    margin: 0;
+    text-align: center;
+    color: #FFD700;
+    font-size: 1.5rem;
+}
+
+.asset-browser-header button {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(0.8rem, 3vw, 1.1rem);
+    padding: 0.4rem 0.8rem;
+    border: 2px solid #A0522D;
+    border-radius: 20px;
+    background-color: #FFD700;
+    color: #A0522D;
+    cursor: pointer;
+}
+
+#asset-gallery {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#asset-gallery h4 {
+    color: #FFD700;
+    -webkit-text-stroke: 1px #A0522D;
+    margin: 0.5rem 0;
+    border-bottom: 2px solid #A0522D;
+    padding-bottom: 0.5rem;
+}
+
+.asset-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.5rem;
+}
+
+.asset-card {
+    background: rgba(255, 215, 0, 0.2);
+    border: 2px solid #A0522D;
+    border-radius: 8px;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.asset-card img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+.asset-card-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    width: 100%;
+}
+
+.asset-card button {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.7rem;
+    padding: 0.3rem;
+    border: 1px solid #A0522D;
+    border-radius: 10px;
+    background-color: #FFD700;
+    color: #A0522D;
+    cursor: pointer;
+    width: 100%;
+}
+
+#asset-generator-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 25;
+}
+
+.generator-content {
+    background: rgba(160, 82, 45, 0.95);
+    border: 4px solid #A0522D;
+    border-radius: 15px;
+    padding: 1.5rem;
+    width: 90vw;
+    max-width: 400px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: relative;
+    color: white;
+}
+
+.generator-content h3 {
+    margin: 0;
+    text-align: center;
+    color: #FFD700;
+}
+
+.generator-content label {
+    font-size: 1.1rem;
+    margin-bottom: -0.5rem;
+}
+
+.generator-content select, .generator-content textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 2px solid #A0522D;
+    font-family: sans-serif;
+    box-sizing: border-box;
+}
+
+.generator-content textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.generator-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.generator-buttons button {
+     font-family: 'Fredoka One', cursive;
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    padding: 0.5rem 1rem;
+    border: 3px solid #A0522D;
+    border-radius: 30px;
+    background-color: #FFD700;
+    color: #A0522D;
+    cursor: pointer;
+    flex: 1;
+}
+
+#close-generator-btn {
+    background-color: #c4c4c4;
+}
+
+#generator-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 30;
+    color: white;
+    border-radius: 12px;
+}
+
+#presets-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    z-index: 12;
+    padding: 1rem;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.presets-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 1rem;
+}
+
+.presets-header h2 {
+    font-size: clamp(1.5rem, 8vw, 2.5rem);
+    color: #FFD700;
+    -webkit-text-stroke: 1px #A0522D;
+    margin: 0;
+}
+
+.presets-header button {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(0.8rem, 3vw, 1.1rem);
+    padding: 0.4rem 0.8rem;
+    border: 2px solid #A0522D;
+    border-radius: 20px;
+    background-color: #FFD700;
+    color: #A0522D;
+    cursor: pointer;
+}
+
+#presets-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.preset-card {
+    background: rgba(160, 82, 45, 0.7);
+    border: 3px solid #A0522D;
+    border-radius: 10px;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.preset-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(255, 215, 0, 0.3);
+}
+
+.preset-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    object-position: top center;
+    border-radius: 5px;
+    background-color: #eee;
+}
+
+.preset-card-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+.preset-card button {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.7rem;
+    padding: 0.3rem 0.5rem;
+    border: 1px solid #A0522D;
+    border-radius: 15px;
+    background-color: #FFD700;
+    color: #A0522D;
+    cursor: pointer;
+}
+
+.preset-card button.public-btn {
+    background-color: #A0522D;
+    color: #FFD700;
+}
+
+.lemon {
+    position: absolute;
+    animation: float 6s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1; /* Make sure lemons are behind content */
+}
+
+.lemon-top-left {
+    width: clamp(150px, 30vw, 350px);
+    top: 2%;
+    left: 2%;
+    animation-duration: 7s;
+}
+
+.lemon-1 {
+    width: clamp(80px, 15vw, 200px);
+    top: 15%;
+    right: 2%;
+    animation-duration: 8s;
+    animation-delay: -2s;
+}
+
+.lemon-2 {
+    width: clamp(50px, 10vw, 120px);
+    bottom: 10%;
+    left: 5%;
+    animation-duration: 5s;
+}
+
+.lemon-3 {
+    width: clamp(60px, 12vw, 150px);
+    bottom: 25%;
+    right: 10%;
+    transform: rotate(45deg);
+    animation-duration: 7s;
+    animation-delay: -4s;
+}
+
+.lemon-4 {
+    width: clamp(40px, 8vw, 90px);
+    top: 60%;
+    left: 5%;
+    transform: rotate(-30deg);
+    animation-duration: 6s;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-20px) rotate(5deg);
+    }
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+}
+
+/* Media Query for smaller screens */
+@media (max-width: 768px) {
+    .creation-container {
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: nowrap;
+        justify-content: center;
+    }
+
+    #inventory-container {
+        order: 2; /* Move clothing below character */
+        width: 45%;
+        max-width: 400px;
+        flex-shrink: 1;
+    }
+
+    #clothing-palette {
+        width: clamp(60px, 20vw, 80px);
+        height: clamp(60px, 20vw, 80px);
+    }
+
+    #character-display {
+        order: 1; /* Move character above clothing */
+        width: 45%;
+        flex-shrink: 1;
+    }
+
+    .creation-buttons {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+    }
+
+    #doll-container {
+        width: 100%;
+        height: clamp(280px, 50vh, 400px);
+    }
+
+    .title-header h1 {
+        -webkit-text-stroke: 1.5px #A0522D;
+    }
+
+    .menu-buttons button {
+        padding: 0.8rem 1.5rem;
+        border-width: 4px;
+    }
+}

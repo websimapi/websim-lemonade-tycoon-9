@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lemonade Tycoon</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main-container">
+        <img src="lemon_3.png" alt="Large Lemon" class="lemon lemon-top-left">
+        <img src="lemon_1.png" alt="Lemon" class="lemon lemon-1">
+        <img src="lemon_2.png" alt="Lemon" class="lemon lemon-2">
+        <img src="lemon_1.png" alt="Lemon" class="lemon lemon-3">
+        <img src="lemon_2.png" alt="Lemon" class="lemon lemon-4">
+
+        <header class="title-header">
+            <h1>Lemonade Tycoon</h1>
+        </header>
+
+        <nav class="menu-buttons">
+            <button id="new-game-btn">New Game</button>
+            <button id="continue-game-btn">Continue Game</button>
+        </nav>
+    </div>
+
+    <div id="character-creation-screen" class="hidden">
+        <div class="creation-container">
+            <div id="inventory-container">
+                <div id="inventory-categories">
+                    <button class="category-btn active" data-category="shirt">Shirts</button>
+                    <button class="category-btn" data-category="pants">Pants</button>
+                    <button class="category-btn" data-category="hat">Hats</button>
+                    <button class="category-btn" data-category="shoes">Shoes</button>
+                    <button class="category-btn" data-category="hair">Hair</button>
+                </div>
+                <div id="item-carousel">
+                    <button class="carousel-btn" id="prev-item-btn">◀</button>
+                    <div id="clothing-palette">
+                        <img src="shirt_1.png" class="clothing-item" data-item-type="shirt" draggable="true" alt="Red T-Shirt">
+                        <img src="shirt_2.png" class="clothing-item" data-item-type="shirt" draggable="true" alt="Green Polo">
+                        <img src="pants_1.png" class="clothing-item" data-item-type="pants" draggable="true" alt="Blue Jeans">
+                        <img src="pants_2.png" class="clothing-item" data-item-type="pants" draggable="true" alt="Khaki Shorts">
+                        <img src="hat_1.png" class="clothing-item" data-item-type="hat" draggable="true" alt="Baseball Cap">
+                        <img src="shoes_1.png" class="clothing-item" data-item-type="shoes" draggable="true" alt="White Sneakers">
+                        <img src="hair_1.png" class="clothing-item" data-item-type="hair" draggable="true" alt="Short spiky black hair">
+                        <img src="hair_2.png" class="clothing-item" data-item-type="hair" draggable="true" alt="Long flowing blonde hair">
+                    </div>
+                    <button class="carousel-btn" id="next-item-btn">▶</button>
+                </div>
+                <button id="browse-assets-btn" title="Browse Assets">☁️</button>
+                <button id="open-generator-btn" title="Generate New Item">✨</button>
+            </div>
+            <div id="character-display">
+                <div class="gender-selection">
+                    <button class="gender-btn" data-gender="male">Male</button>
+                    <button class="gender-btn active" data-gender="female">Female</button>
+                </div>
+                <div id="doll-container">
+                     <img id="doll-image" src="female_doll.png" alt="Character Doll">
+                </div>
+                <div id="ai-preview-container">
+                    <p>AI Input Preview</p>
+                    <canvas id="ai-preview-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="creation-buttons">
+            <button id="back-to-menu-btn">Back</button>
+            <button id="presets-btn">Presets</button>
+            <button id="start-game-btn">Generate Character</button>
+        </div>
+    </div>
+
+    <div id="asset-generator-modal" class="hidden">
+        <div class="generator-content">
+            <h3>Generate a New Wearable</h3>
+            <label for="item-type-select">Item Type:</label>
+            <select id="item-type-select">
+                <option value="shirt">Shirt</option>
+                <option value="pants">Pants</option>
+                <option value="hair">Hair</option>
+            </select>
+            <label for="item-prompt-input">Description:</label>
+            <textarea id="item-prompt-input" placeholder="e.g., a blue hoodie with a star"></textarea>
+            <div class="generator-buttons">
+                <button id="close-generator-btn">Close</button>
+                <button id="generate-asset-btn">Generate</button>
+            </div>
+            <div id="generator-loading-overlay" class="hidden">
+                <div class="loading-spinner"></div>
+                <p>Creating your item...</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="asset-browser-modal" class="hidden">
+        <div class="asset-browser-content">
+            <div class="asset-browser-header">
+                <h3>Browse Wearables</h3>
+                <button id="close-browser-btn">Close</button>
+            </div>
+            <div id="asset-gallery">
+                <!-- Asset cards will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <div id="presets-screen" class="hidden">
+        <div class="presets-header">
+            <h2>Character Presets</h2>
+            <button id="back-to-editor-from-presets-btn">Back to Editor</button>
+        </div>
+        <div id="presets-gallery">
+            <!-- Preset items will be injected here -->
+        </div>
+    </div>
+
+    <div id="loading-overlay" class="hidden">
+        <div class="loading-spinner"></div>
+        <p>Generating your character...</p>
+    </div>
+
+    <div id="generation-result-screen" class="hidden">
+        <h2>Your Character!</h2>
+        <img id="generated-character-image" src="" alt="Generated Character">
+        <div class="result-buttons">
+            <button id="back-to-editor-btn">Go Back</button>
+            <button id="confirm-character-btn">Confirm & Start</button>
+        </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4c6229722a6346bc8eb5cb0e5eae5d41","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
